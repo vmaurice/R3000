@@ -14,7 +14,7 @@ use IEEE.STD_LOGIC_UNSIGNED.all;
 USE work.bus_mux_pkg.ALL;
 
 
-ENTITY multiplexor IS
+ENTITY multiplexor_5 IS
 	GENERIC 
 	(
 		mux_size : INTEGER := 5
@@ -25,12 +25,12 @@ ENTITY multiplexor IS
 		sel_input : IN STD_LOGIC_VECTOR(mux_size-1 DOWNTO 0);
 		output : OUT STD_LOGIC_VECTOR(31 DOWNTO 0)
 	);
-END ENTITY multiplexor;
+END ENTITY multiplexor_5;
 
 
-ARCHITECTURE multiplexor_arch of multiplexor is
+ARCHITECTURE multiplexor_5_arch of multiplexor_5 is
 begin
     output <= input(conv_integer(sel_input));
 	
 
-END ARCHITECTURE multiplexor_arch;
+END ARCHITECTURE multiplexor_5_arch;
