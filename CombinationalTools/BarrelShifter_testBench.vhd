@@ -44,11 +44,11 @@ end process P_TIMEOUT;
         output          => outB);   
         
 
-    inB <= conv_std_logic_vector(8, inB'length), conv_std_logic_vector(32, inB'length) after 20 ns, conv_std_logic_vector(4, inB'length) after 40 ns;
-    nbshift <= "00010";
-    left <= '0';
-    logic <= '0';
-    rotate <= '0';
+    inB <= conv_std_logic_vector(8, inB'length), conv_std_logic_vector(32, inB'length) after 20 ns, conv_std_logic_vector(2**30, inB'length) after 30 ns, conv_std_logic_vector(4, inB'length) after 40 ns, x"ffffffff" after 50 ns, x"ffff0000" after 60 ns, conv_std_logic_vector(4, inB'length) after 70 ns;
+    nbshift <= "00010", "00101" after 30 ns;
+    left <= '0', '1' after 20 ns, '0' after 30 ns, '1' after 50 ns;
+    logic <= '0', '1' after 40 ns;
+    rotate <= '0', '1' after 30 ns;
     
 
 

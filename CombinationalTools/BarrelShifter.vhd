@@ -49,27 +49,6 @@ BEGIN
 			else ((2**i - 1) downto 0 => '0') & pass(i)(shifter_width - 1 downto 2**i) when ShiftRotate = '0' and LeftRight = '1' and LogicArith = '1'
 			else pass(i)((shifter_width - 2**i - 1) downto 0) & pass(i)(shifter_width - 1 downto (shifter_width - 2**i)) when ShiftRotate = '1' and LeftRight = '0'
 			else pass(i)((2**i - 1) downto 0) & pass(i)(shifter_width - 1 downto 2**i);
-
-
-
-			
-	
-	--		with selecteur'(ShiftRotate & LeftRight & LogicArith) select
-	--				-- ShiftRotate = '0' LeftRight = '0'
-	--		S <= 	--pass(i)((shifter_width - 2**i - 1) downto 0) & ((2**i - 1) downto 0 => '0') when "000",
-	--				--pass(i)((shifter_width - 2**i - 1) downto 0) & ((2**i - 1) downto 0 => '0') when "001",
-	--				
-	--				-- ShiftRotate = '0' LeftRight = '1' LogicArith = '0'
-	--				((2**i - 1) downto 0 => pass(i)(shifter_width - 1)) & pass(i)(shifter_width - 1 downto 2**i) when "010",
-	--				-- ShiftRotate = '0' LeftRight = '1' LogicArith = '1'
-	--				((2**i - 1) downto 0 => '0') & pass(i)(shifter_width - 1 downto 2**i) when "011",
---
-	--				-- ShiftRotate = '1' LeftRight = '0'
-	--				pass(i)((shifter_width - 2**i - 1) downto 0) & pass(i)(shifter_width - 1 downto (shifter_width - 2**i)) when "100",
-	--				pass(i)((shifter_width - 2**i - 1) downto 0) & pass(i)(shifter_width - 1 downto (shifter_width - 2**i)) when "101",
---
-	--				-- ShiftRotate = '1' LeftRight = '1'
-	--				pass(i)((2**i - 1) downto 0) & pass(i)(shifter_width - 1 downto 2**i) when others;
 					
 
 	--		if ShiftRotate = 0 then
