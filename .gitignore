@@ -1,4 +1,4 @@
 *.cf
 *.ghw
 
-/test.vhd
+test.vhd
