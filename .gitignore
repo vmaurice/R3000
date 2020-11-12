@@ -2,3 +2,5 @@
 *.ghw
 
 test.vhd
+*.tgz
+entity.vhd
