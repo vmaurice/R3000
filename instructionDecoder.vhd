@@ -12,7 +12,8 @@ USE SequentialTools.ALL;
 ENTITY InstructionDecoder IS
 	PORT
 	(
-		code_op : IN STD_LOGIC_VECTOR(5 DOWNTO 0);
+        code_op : IN STD_LOGIC_VECTOR(5 DOWNTO 0);
+        func_code : IN STD_LOGIC_VECTOR(5 DOWNTO 0);
 		Saut : OUT STD_LOGIC_VECTOR(1 DOWNTO 0);
 		EcrireMem_W : OUT STD_LOGIC;
 		EcrireMem_H : OUT STD_LOGIC;
@@ -39,50 +40,54 @@ END ENTITY InstructionDecoder;
 
 ARCHITECTURE instructionDecoder_arch of InstructionDecoder IS
 
-    signal outDec : std_logic_vector( (2**code_op'length -1) DOWNTO 0);
+    signal m : std_logic_vector( (2**code_op'length -1) DOWNTO 0);
+    signal jr, jalr : std_logic;
 
 BEGIN
 
+    jr <= '1' when func_code = "001000" else '0';
+    jalr <= '1' when func_code = "001001" else '0';
+
     -- decoder
-    outDec <= STD_LOGIC_VECTOR(to_unsigned(1, outDec'length) sll to_integer(unsigned(code_op)));
+    m <= STD_LOGIC_VECTOR(to_unsigned(1, m'length) sll to_integer(unsigned(code_op)));
 
-    OpExt <= outDec(1) or outDec(4) or outDec(5) or outDec(6) or outDec(7) or outDec(8) or outDec(10) or outDec(32) or outDec(33) or outDec(35) or outDec(36) or outDec(37) or outDec(40) or outDec(41) or outDec(43);
+    OpExt <= m(1) or m(4) or m(5) or m(6) or m(7) or m(8) or m(10) or m(32) or m(33) or m(35) or m(36) or m(37) or m(40) or m(41) or m(43);
 
-    RegDst(1) <= outDec(1) or outDec(3);
-    RegDst(0) <= outDec(0);
+    RegDst(1) <= m(1) or m(3);
+    RegDst(0) <= m(0) or jalr;
 
-    UALSrc(1) <= outDec(1) or outDec(15);
-    UALSrc(0) <= outDec(8) or outDec(9) or outDec(10) or outDec(11) or outDec(12) or outDec(13) or outDec(14) or outDec(15) or outDec(32) or outDec(33) or outDec(35) or outDec(36) or outDec(37);
+    UALSrc(1) <= m(1) or m(15);
+    UALSrc(0) <= m(8) or m(9) or m(10) or m(11) or m(12) or m(13) or m(14) or m(15) or m(32) or m(33) or m(35) or m(36) or m(37);
     
-    MemVersReg(1) <= outDec(0) or outDec(1) or outDec(3);
-    MemVersReg(0) <= outDec(32) or outDec(33) or outDec(35) or outDec(36) or outDec(37);
+    MemVersReg(1) <= m(0) or m(1) or m(3) or jalr;
+    MemVersReg(0) <= m(32) or m(33) or m(35) or m(36) or m(37);
 
-    EcrireReg <= outDec(0) or outDec(1) or outDec(3) or outDec(8) or outDec(9) or outDec(10) or outDec(11) or outDec(12) or outDec(13) or outDec(14) or outDec(15) or outDec(32) or outDec(33) or outDec(35) or outDec(36) or outDec(37);
+    EcrireReg <= m(0) or m(1) or m(3) or m(8) or m(9) or m(10) or m(11) or m(12) or m(13) or m(14) or m(15) or m(32) or m(33) or m(35) or m(36) or m(37) or jalr;
      
-    LireMem_SB <= outDec(32);
-    LireMem_SH <= outDec(33);
-    LireMem_W <= outDec(35);
-    LireMem_UB <= outDec(36);
-    LireMem_UH <= outDec(37);
+    LireMem_SB <= m(32);
+    LireMem_SH <= m(33);
+    LireMem_W  <= m(35);
+    LireMem_UB <= m(36);
+    LireMem_UH <= m(37);
 
 
-    EcrireMem_B <= outDec(40);
-	EcrireMem_H <= outDec(41);
-    EcrireMem_W <= outDec(43);
+    EcrireMem_B <= m(40);
+	EcrireMem_H <= m(41);
+    EcrireMem_W <= m(43);
 
 
-    B_eq <= outDec(4);
-    B_ne <= outDec(5);
-    B_lez <= outDec(6);
-    B_gtz <= outDec(7);
+    B_eq <= m(4);
+    B_ne <= m(5);
+    B_lez <= m(6);
+    B_gtz <= m(7);
 
-    B_ltz_ltzAl_gez_gezAl <= outDec(1);
+    B_ltz_ltzAl_gez_gezAl <= m(1);
 
-    Saut(1) <= outDec(0);
-    Saut(0) <= outDec(2) or outDec(3);
+    Saut(1) <= m(0) or jr or jalr;
+    Saut(0) <= m(2) or m(3);
 
-    UALOp(1) <= outDec(0) or outDec(8) or outDec(9) or outDec(10) or outDec(11) or outDec(12) or outDec(13) or outDec(14) or outDec(15);
-    UALOp(0) <= outDec(1) or outDec(4) or outDec(5) or outDec(6) or outDec(7) or outDec(8) or outDec(9) or outDec(10) or outDec(11) or outDec(12) or outDec(13) or outDec(14) or outDec(15);
+    UALOp(1) <= m(0) or m(8) or m(9) or m(10) or m(11) or m(12) or m(13) or m(14) or m(15);
+    UALOp(0) <= m(1) or m(4) or m(5) or m(6) or m(7) or m(8) or m(9) or m(10) or m(11) or m(12) or m(13) or m(14) or m(15);
 
     
 

@@ -12,6 +12,7 @@ end test ;
 architecture arch of test is
 
     signal tb_code_op : STD_LOGIC_VECTOR(5 DOWNTO 0);
+    signal tb_func_code : STD_LOGIC_VECTOR(5 DOWNTO 0);
     signal tb_Saut : STD_LOGIC_VECTOR(1 DOWNTO 0);
     signal tb_EcrireMem_W : STD_LOGIC;
     signal tb_EcrireMem_H : STD_LOGIC;
@@ -37,6 +38,7 @@ begin
 
     parallelregister : ENTITY WORK.InstructionDecoder(instructionDecoder_arch) port map(
         code_op                 =>  tb_code_op,
+        func_code               =>  tb_func_code,
         saut                    =>  tb_Saut,
         EcrireMem_W             =>  tb_EcrireMem_W,
         EcrireMem_H             =>  tb_EcrireMem_H,
