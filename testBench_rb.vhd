@@ -59,8 +59,8 @@ end process P_TIMEOUT;
 
 
 
-	wr <= '1', '0' after 15 ns, '1' after 25 ns, '0' after 40 ns, '1' after 50 ns, '0' after 60 ns;
-	data <= conv_std_logic_vector(23, data'length), conv_std_logic_vector(5, data'length) after 15 ns, conv_std_logic_vector(67, data'length) after 20 ns, conv_std_logic_vector(33, data'length) after 40 ns;
+	wr <= '0', '1' after 10 ns, '0' after 15 ns, '1' after 25 ns, '0' after 40 ns, '1' after 50 ns, '0' after 60 ns;
+	data <= conv_std_logic_vector(23, data'length) after 10 ns, conv_std_logic_vector(5, data'length) after 15 ns, conv_std_logic_vector(67, data'length) after 20 ns, conv_std_logic_vector(33, data'length) after 40 ns;
 	rs <= "00000", "01000" after 10 ns, "00100" after 30 ns;
 	rt <= "01000", "00010" after 15 ns, "11111" after 20 ns, "00000" after 50 ns;
 	rd <= "01000", "00100" after 20 ns, "11111" after 25 ns, "00100" after 45 ns;

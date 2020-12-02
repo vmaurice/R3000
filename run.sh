@@ -6,3 +6,4 @@ ghdl -a --ieee=synopsys -fexplicit --work=SequentialTools SequentialTools/parall
 ghdl -a --ieee=synopsys -fexplicit -PCombinationalTools -PSequentialTools alu.vhd adder.vhd CpMuxControler.vhd Extension.vhd instructionDecoder.vhd registerBank.vhd UALControler.vhd r3000.vhd testBench_r3000.vhd
 ghdl -e --ieee=synopsys -fexplicit test
 ghdl -r --ieee=synopsys -fexplicit test --wave=r3000.ghw
+#ghdl -r --ieee=synopsys -fexplicit test --wave=registerbank.ghw

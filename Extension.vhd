@@ -21,8 +21,8 @@ architecture Extension_arch of Extension is
 
 begin
 
-    output <= inst & x"ffff" when (inst(15) and OpExt) = '1'
-            else inst & x"0000";
+    output <= x"ffff" & inst when (inst(15) and OpExt) = '1'
+            else x"0000" & inst;
     
 
 

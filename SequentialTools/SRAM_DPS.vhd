@@ -27,7 +27,7 @@ END ENTITY SRAM_DPS;
 
 ARCHITECTURE SRAM_DPS_ARCH of SRAM_DPS IS
 
-    signal sram : bus_mux_array(10 DOWNTO 0);
+    signal sram : bus_mux_array(50 DOWNTO 0);
 
 BEGIN
 

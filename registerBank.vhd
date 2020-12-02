@@ -72,7 +72,7 @@ tmp <= '1' when rising_edge(clk) and write_register = '1'
 			output => dOut);
 
 	-- RO = 0
-	R(0) <= (others=>'0');
+	R(0) <= x"00000000";
 
 	-- ParallelRegister : R1 à R31
 	GEN_REG : FOR i in 1 to 31 generate

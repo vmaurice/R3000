@@ -57,7 +57,8 @@ BEGIN
     RegDst(0) <= m(0) or jalr;
 
     UALSrc(1) <= m(1) or m(15);
-    UALSrc(0) <= m(8) or m(9) or m(10) or m(11) or m(12) or m(13) or m(14) or m(15) or m(32) or m(33) or m(35) or m(36) or m(37);
+    UALSrc(0) <= m(8) or m(9) or m(10) or m(11) or m(12) or m(13) or m(14) or m(15) or m(32) or m(33) or m(35) or m(36) or m(37) or m(40) or m(41) or m(43);
+
     
     MemVersReg(1) <= m(0) or m(1) or m(3) or jalr;
     MemVersReg(0) <= m(32) or m(33) or m(35) or m(36) or m(37);

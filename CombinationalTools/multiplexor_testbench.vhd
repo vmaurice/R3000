@@ -21,7 +21,7 @@ architecture arch of test is
 
 begin
 
-    multiplexer : ENTITY WORK.multiplexor_5(multiplexor_5_arch) port map(input => inMul, sel_input => sel, output => outMul);
+    multiplexer : ENTITY WORK.multiplexor(multiplexor_arch) port map(input => inMul, sel_input => sel, output => outMul);
     inMul(2) <= conv_std_logic_vector(5,32), conv_std_logic_vector(3,32) after 10 ns, conv_std_logic_vector(1,32) after 30 ns;
     inMul(3) <= conv_std_logic_vector(2,32), conv_std_logic_vector(20,32) after 20 ns, conv_std_logic_vector(4,32) after 40 ns;
     sel <= conv_std_logic_vector(2,sel'length), conv_std_logic_vector(3,sel'length) after 15 ns; 

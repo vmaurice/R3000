@@ -130,7 +130,7 @@ ARCHITECTURE R3000_arch of R3000 IS
 	END COMPONENT SRAM_DPS;
 
 
-	signal inst, r_ext, rb1, rb2, i2_Alu, res_Alu : STD_LOGIC_VECTOR(31 DOWNTO 0);
+	signal inst, r_ext, rb1, rb2, rb_data, i2_Alu, res_Alu : STD_LOGIC_VECTOR(31 DOWNTO 0);
 	signal rd : STD_LOGIC_VECTOR(4 DOWNTO 0);
 	signal r_Sel : STD_LOGIC_VECTOR(3 DOWNTO 0);
 	signal r_Enable_V, r_Slt_Slti, r_N, r_Z, r_C, r_V, r_CPSrc : STD_LOGIC;
@@ -190,6 +190,11 @@ ARCHITECTURE R3000_arch of R3000 IS
 			else inst(15 DOWNTO 11) when r_RegDst = "01"
 			else "11111";
 
+	rb_data <= DMem_Dbus when r_MemVersReg = "01"
+			else res_Alu when r_MemVersReg = "00" 
+			else res_Alu when r_MemVersReg = "10" and r_Saut = "10"
+			else x"00000000";
+
 	-- RegisterBank
 	registerBank_inst : RegisterBank
 		PORT MAP(
@@ -198,8 +203,8 @@ ARCHITECTURE R3000_arch of R3000 IS
 			source_register_1       => inst(20 DOWNTO 16),
 			data_out_1              => rb2,
 			destination_register    => rd,
-			data_in                 => DMem_Dbus,
-			write_register          => IMem_WR,
+			data_in                 => rb_data,
+			write_register          => r_EcrireReg,
 			clk 					=> CLK);
 
 	

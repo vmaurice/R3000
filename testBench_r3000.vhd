@@ -10,7 +10,7 @@ end test ;
 architecture arch of test is
 
     constant clkpulse   : Time := 5 ns; -- 1/2 periode horloge
-    constant TIMEOUT 	: time := 150 ns; -- timeout de la simulation
+    constant TIMEOUT 	: time := 100 ns; -- timeout de la simulation
     
      
 	signal tb_CLK : STD_LOGIC;
@@ -51,12 +51,12 @@ end process P_TIMEOUT;
         DMem_WR     => tb_DMem_WR );
 
     -- Instruction
-    tb_IMem_Dbus <= x"00000000";
+    tb_IMem_Dbus <= x"00000000", x"24010005" after 5 ns, x"ac010008" after 15 ns, x"24010002" after 25 ns, x"ac010004" after 35 ns, x"8c010008" after 45 ns, x"8c020004" after 55 ns, x"00220821" after 65 ns, x"ac010000" after 70 ns;
     tb_IMem_WR <= '0';
 
     -- Data
-    tb_DMem_Dbus <= x"00000000"; 
-    tb_DMem_WR <= '0';
+    --tb_DMem_Dbus <= x"00000000"; 
+    tb_DMem_WR <= '1', '0' after 15 ns, '1' after 25 ns, '0' after 35 ns, '1' after 100 ns;
 
 
 end architecture ;
