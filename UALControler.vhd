@@ -27,7 +27,7 @@ begin
 
     Slt_Slti <= (UALOp(1) and not UALOp(0) and f(3) and not f(2) and f(1) and not f(0)) or (UALOp(1) and UALOp(0) and not op(2) and op(1) and not op(0));
 
-	Sel(0) <= (UALOp(1) and not UALOp(0) and ( (not f(5) and f(3) and not f(2) and not f(1) and not f(0)) or (f(5) and not f(3) and f(2) and not f(1) and f(0)) or (not f(5) and not f(3) and f(2) and f(1) and not f(0)) or (not f(5) and f(3) and not f(2) and f(1))) ) or 
+	Sel(0) <= (UALOp(1) and not UALOp(0) and ( (not f(5) and not f(3) and not f(2) and not f(1) and not f(0)) or (f(5) and not f(3) and f(2) and not f(1) and f(0)) or (not f(5) and not f(3) and f(2) and f(1) and not f(0)) or (not f(5) and f(3) and not f(2) and f(1))) ) or 
 			(UALOp(1) and UALOp(0) and (op(1) or (op(2) and not op(1) and op(0))));
 	
 	Sel(1) <= not UALOp(1) or 
@@ -41,5 +41,5 @@ begin
 	Sel(3) <= (not UALOp(1) and UALOp(0)) or
 			(UALOp(1) and not UALOp(0) and ( (f(5) and not f(3) and not f(2) and f(1)) or (not f(5) and f(3) and not f(2) and f(1))) ) or
 			( UALOp(1) and UALOp(0) and not op(2) and op(1) );
-
+			
 end UALControler_arch ; -- UALControler_arch

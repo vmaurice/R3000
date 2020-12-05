@@ -10,7 +10,7 @@ end test ;
 architecture arch of test is
 
     constant clkpulse   : Time := 5 ns; -- 1/2 periode horloge
-    constant TIMEOUT 	: time := 100 ns; -- timeout de la simulation
+    constant TIMEOUT 	: time := 150 ns; -- timeout de la simulation
     
      
 	signal tb_CLK : STD_LOGIC;
@@ -39,6 +39,22 @@ begin
 	assert FALSE report "SIMULATION TIMEOUT!!!" severity FAILURE;
 end process P_TIMEOUT;
 
+P_CHECK : process
+begin
+    wait for 50 ns;
+    assert (tb_DMem_Dbus = x"00000005");
+        report "Data bus wrong value, (5)"
+        severity ERROR;
+    wait for 10 ns;
+    assert (tb_DMem_Dbus = x"00000003");
+        report "Data bus wrong value, (3)"
+        severity ERROR;
+    wait for 22 ns;
+    assert (tb_DMem_Dbus = x"00000008");
+        report "Data bus wrong value, (5 + 3 = 8)"
+        severity ERROR;
+end process P_CHECK;
+
 
 
     r3000 : ENTITY WORK.r3000 port map(
@@ -51,12 +67,12 @@ end process P_TIMEOUT;
         DMem_WR     => tb_DMem_WR );
 
     -- Instruction
-    tb_IMem_Dbus <= x"00000000", x"24010005" after 5 ns, x"ac010008" after 15 ns, x"24010002" after 25 ns, x"ac010004" after 35 ns, x"8c010008" after 45 ns, x"8c020004" after 55 ns, x"00220821" after 65 ns, x"ac010000" after 70 ns;
+    tb_IMem_Dbus <= x"00000000", x"24010005" after 5 ns, x"ac010008" after 15 ns, x"24010003" after 25 ns, x"ac010004" after 35 ns, x"8c010008" after 45 ns, x"8c020004" after 55 ns, x"00220821" after 65 ns, x"ac010000" after 70 ns, x"8c010000" after 80 ns, x"00010880" after 85 ns, x"ac010000" after 90 ns;
     tb_IMem_WR <= '0';
 
     -- Data
     --tb_DMem_Dbus <= x"00000000"; 
-    tb_DMem_WR <= '1', '0' after 15 ns, '1' after 25 ns, '0' after 35 ns, '1' after 100 ns;
+    tb_DMem_WR <= '1', '0' after 15 ns, '1' after 25 ns, '0' after 35 ns, '1' after 150 ns;
 
 
 end architecture ;
