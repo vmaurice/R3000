@@ -10,7 +10,7 @@ end test ;
 architecture arch of test is
 
     constant clkpulse   : Time := 5 ns; -- 1/2 periode horloge
-    constant TIMEOUT 	: time := 150 ns; -- timeout de la simulation
+    constant TIMEOUT 	: time := 200 ns; -- timeout de la simulation
     
      
 	signal tb_CLK : STD_LOGIC;
@@ -41,7 +41,7 @@ end process P_TIMEOUT;
 
 P_CHECK : process
 begin
-    wait for 50 ns;
+    wait for 60 ns;
     assert (tb_DMem_Dbus = x"00000005");
         report "Data bus wrong value, (5)"
         severity ERROR;
@@ -67,12 +67,28 @@ end process P_CHECK;
         DMem_WR     => tb_DMem_WR );
 
     -- Instruction
-    tb_IMem_Dbus <= x"00000000", x"24010005" after 5 ns, x"ac010008" after 15 ns, x"24010003" after 25 ns, x"ac010004" after 35 ns, x"8c010008" after 45 ns, x"8c020004" after 55 ns, x"00220821" after 65 ns, x"ac010000" after 70 ns, x"8c010000" after 80 ns, x"00010880" after 85 ns, x"ac010000" after 90 ns;
+    tb_IMem_Dbus <= x"00000000", 
+                    x"241e0000" after 5 ns,     -- addiu    $fp, $zero, $zero 
+                    x"24010005" after 15 ns,    -- addiu	$1, $zero, 5
+                    x"afc10008" after 25 ns,    -- sw	    $1, 8($fp) 
+                    x"24010003" after 35 ns,    -- addiu	$1, $zero, 3
+                    x"afc10004" after 45 ns,    -- sw	    $1, 4($fp)
+                    x"8fc10008" after 55 ns,    -- lw	    $1, 8($fp)
+                    x"8fc20004" after 65 ns,    -- lw	    $2, 4($fp)
+                    x"00220821" after 75 ns,    -- addu	    $1, $1, $2
+                    x"afc10000" after 80 ns,    -- sw	    $1, 0($fp)
+                    x"8fc10000" after 90 ns,    -- lw	    $1, 0($fp)
+                    x"00010880" after 95 ns,    -- sll      $1, $1, 2
+                    x"afc10000" after 100 ns,   -- sw	    $1, 0($fp)
+                    x"8fc10000" after 110 ns,   -- lw   	$1, 0($fp)
+                    x"28210040" after 120 ns,   -- slti	    $1, $1, 64
+                    x"24020001" after 130 ns,   -- addiu    $2, $zero, 1
+                    x"1022004A" after 140 ns;   -- beq   	$1, $2, 74  
     tb_IMem_WR <= '0';
 
     -- Data
     --tb_DMem_Dbus <= x"00000000"; 
-    tb_DMem_WR <= '1', '0' after 15 ns, '1' after 25 ns, '0' after 35 ns, '1' after 150 ns;
+    tb_DMem_WR <= '1', '0' after 25 ns, '1' after 35 ns, '0' after 45 ns, '1' after 150 ns;
 
 
 end architecture ;

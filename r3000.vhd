@@ -22,6 +22,16 @@ ENTITY R3000 IS
 END ENTITY;
 
 ARCHITECTURE R3000_arch of R3000 IS
+
+	COMPONENT adder IS
+	PORT
+	(
+		op_0 : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+		op_1 : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
+		sum : OUT STD_LOGIC_VECTOR(31 DOWNTO 0);
+		C : OUT STD_LOGIC
+	);
+	END COMPONENT adder;
  
 	COMPONENT RegisterBank IS
 	PORT (
@@ -144,7 +154,28 @@ ARCHITECTURE R3000_arch of R3000 IS
 	-- SSRAM
 	signal WE, OE : STD_LOGIC;
 
+	-- Adder
+	signal pc, add_1, add_2, adder2_op1 : STD_LOGIC_VECTOR(31 DOWNTO 0);
+	signal add_carry_1, add_carry_2 : STD_LOGIC;
+
+	-- mux
+	signal mux_cpSrc, mux_saut : STD_LOGIC_VECTOR(31 DOWNTO 0);
+
+
+
 	BEGIN
+
+	pc <= (pc'range=>'0') when pc = (pc'range=>'U')
+		else mux_saut when rising_edge(CLK) and r_saut /= "10" and r_MemversReg /= "10";
+
+
+	-- Adder
+	adder_inst1 : adder
+		PORT MAP(
+			op_0 	=> pc,
+			op_1 	=> x"00000004",
+			sum 	=> add_1,
+			C 		=> add_carry_1);
 
 	inst <= IMem_Dbus;
 
@@ -184,6 +215,16 @@ ARCHITECTURE R3000_arch of R3000 IS
 			output 	=> r_ext
 		);
 
+	adder2_op1 <= r_ext(30 DOWNTO 0) & '0';
+	
+	-- Adder 2
+	adder_inst2 : adder
+	PORT MAP(
+		op_0 	=> add_1,
+		op_1 	=> adder2_op1,
+		sum 	=> add_2,
+		C 		=> add_carry_2);
+
 
 
 	rd <= inst(20 DOWNTO 16) when r_RegDst = "00"
@@ -192,7 +233,7 @@ ARCHITECTURE R3000_arch of R3000 IS
 
 	rb_data <= DMem_Dbus when r_MemVersReg = "01"
 			else res_Alu when r_MemVersReg = "00" 
-			else res_Alu when r_MemVersReg = "10" and r_Saut = "10"
+			else mux_saut when r_MemVersReg = "10"
 			else x"00000000";
 
 	-- RegisterBank
@@ -256,10 +297,20 @@ ARCHITECTURE R3000_arch of R3000 IS
 			CPSrc					=> r_CPSrc
 		);
 
+
+	mux_cpSrc <= add_1 when r_CPSrc = '0'
+			else add_2;
+
+	mux_saut <= mux_cpSrc when r_Saut = "00"
+			else pc(31 DOWNTO 28) & inst(25 DOWNTO 0) & "00" when r_Saut = "01"
+			else res_Alu;
+
+
+	
+	-- SRAM
 	WE <= '0' when r_EcrireMem_W = '1' or r_EcrireMem_H = '1' or r_EcrireMem_B = '1' else '1';
 	OE <= '0' when r_LireMem_W = '1' or r_LireMem_UH = '1' or r_LireMem_UB = '1' or r_LireMem_SH = '1' or r_LireMem_SB = '1' else '1';
 
-	-- SRAM
 	sram_inst : SRAM_DPS
 		PORT MAP(
 				address 	=> res_Alu,
