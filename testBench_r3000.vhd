@@ -10,7 +10,7 @@ end test ;
 architecture arch of test is
 
     constant clkpulse   : Time := 5 ns; -- 1/2 periode horloge
-    constant TIMEOUT 	: time := 200 ns; -- timeout de la simulation
+    constant TIMEOUT 	: time := 170 ns; -- timeout de la simulation
     
      
 	signal tb_CLK : STD_LOGIC;
@@ -42,17 +42,21 @@ end process P_TIMEOUT;
 P_CHECK : process
 begin
     wait for 60 ns;
-    assert (tb_DMem_Dbus = x"00000005");
+    assert (tb_DMem_Dbus = x"00000005")
         report "Data bus wrong value, (5)"
-        severity ERROR;
+        severity FAILURE;
     wait for 10 ns;
-    assert (tb_DMem_Dbus = x"00000003");
+    assert (tb_DMem_Dbus = x"00000003")
         report "Data bus wrong value, (3)"
-        severity ERROR;
-    wait for 22 ns;
-    assert (tb_DMem_Dbus = x"00000008");
+        severity FAILURE;
+    wait for 25 ns;
+    assert (tb_DMem_Dbus = x"00000008")
         report "Data bus wrong value, (5 + 3 = 8)"
-        severity ERROR;
+        severity FAILURE;
+    wait for 20 ns;
+    assert (tb_DMem_Dbus = x"00000020")
+        report "Data bus wrong value, (8 << 2 = 32)"
+        severity FAILURE;
 end process P_CHECK;
 
 
